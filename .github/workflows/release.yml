@@ -23,6 +23,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup Java 17 for Gradle
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Prepare parameters
         run: |
           git log --pretty=format:"%H - %an, %aI : %s" -5
