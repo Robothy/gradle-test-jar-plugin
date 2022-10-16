@@ -48,16 +48,16 @@ jobs:
 
       - name: Release
         if: ${{inputs.gradleLogLevel == 'None'}}
-        run: ./gradlew check publishPlugins -PRELEASE=true
+        run: ./gradlew check publishPlugins -Prelease=true
 
       - name: Release(Info)
         if: ${{inputs.gradleLogLevel == 'Info'}}
-        run: ./gradlew check publishPlugins -PRELEASE=true --info
+        run: ./gradlew check publishPlugins -Prelease=true --info
 
       - name: Release(Debug)
         if: ${{inputs.gradleLogLevel == 'Debug'}}
-        run: ./gradlew check publishPlugins -PRELEASE=true --debug
+        run: ./gradlew check publishPlugins -Prelease=true --debug
 
       - name: Release(Stacktrace)
         if: ${{inputs.gradleLogLevel == 'Stacktrace'}}
-        run: ./gradlew check publishPlugins -PRELEASE=true --stacktrace
+        run: ./gradlew check publishPlugins -Prelease=true --stacktrace
