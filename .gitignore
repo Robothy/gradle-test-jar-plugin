@@ -1,0 +1,6 @@
+/.gradle/
+/.idea/
+/build/
+*/.gradle/*
+/src/functionalTest/resources/test-jar-project/.gradle/
+/src/functionalTest/resources/test-jar-project/build/

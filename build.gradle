@@ -1,0 +1,66 @@
+plugins {
+    id 'java-gradle-plugin'
+    id "com.gradle.plugin-publish" version "1.0.0"
+    id 'maven-publish'
+    id 'robothy-platform-release'
+}
+
+group 'com.robothy'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+def functionalTest = sourceSets.create("functionalTest")
+
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    functionalTestRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+java {
+    withSourcesJar()
+}
+
+gradlePlugin {
+
+    testSourceSets(sourceSets.functionalTest)
+
+    plugins {
+        testJarPlugin {
+            id = 'com.robothy.test-jar'
+            implementationClass = 'com.robothy.gradle.plugin.TestJarPlugin'
+            displayName = 'Test Jar Plugin'
+        }
+    }
+
+}
+
+pluginBundle {
+    website = 'https://github.com/Robothy/gradle-test-jar-plugin'
+    vcsUrl = 'https://github.com/Robothy/gradle-test-jar-plugin'
+    description = 'Package tests and run tests in jars.'
+    tags = ['java', 'test', 'jar', 'test-jar', 'verification']
+}
+
+def functionalTestTask = tasks.register('functionalTest', Test) {
+    description = 'Runs the funcional test'
+    group = 'verification'
+    testClassesDirs = functionalTest.output.classesDirs
+    classpath = functionalTest.runtimeClasspath
+    mustRunAfter(tasks.named('test'))
+
+    useJUnitPlatform()
+}
+
+tasks.named('check') {
+    dependsOn(functionalTestTask)
+}
+
+test {
+    useJUnitPlatform()
+}
