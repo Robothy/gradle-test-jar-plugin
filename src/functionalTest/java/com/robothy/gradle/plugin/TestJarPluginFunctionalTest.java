@@ -20,12 +20,6 @@ public class TestJarPluginFunctionalTest {
         .build();
 
     Assertions.assertTrue(result.getOutput().contains("BUILD SUCCESSFUL"));
-
-    File jar = new File(projectPath + "/build/libs/test-jar-project-1.0.jar");
-    Assertions.assertTrue(jar.exists());
-
-    File testJar = new File(projectPath + "/build/libs/test-jar-project-1.0-test.jar");
-    Assertions.assertTrue(testJar.exists());
   }
 
 
