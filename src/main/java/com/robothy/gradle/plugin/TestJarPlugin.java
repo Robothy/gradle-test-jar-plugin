@@ -15,6 +15,7 @@ import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.api.tasks.testing.TestReport;
 import org.gradle.jvm.tasks.Jar;
@@ -61,7 +62,9 @@ public class TestJarPlugin implements Plugin<Project> {
   private void configureTestJar(Project project) {
     JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
     SourceSet testSourceSet = javaPluginExtension.getSourceSets().getByName("test");
-    Jar testJarTask = project.getTasks().replace(TEST_JAR_TASK_NAME, Jar.class);
+
+    Jar testJarTask = project.getTasks().register(TEST_JAR_TASK_NAME, Jar.class).get();
+
     testJarTask.getArchiveClassifier().set(TEST_CLASSIFIER);
     testJarTask.doFirst(jar -> {
       testJarTask.from(testSourceSet.getResources().getSourceDirectories());
