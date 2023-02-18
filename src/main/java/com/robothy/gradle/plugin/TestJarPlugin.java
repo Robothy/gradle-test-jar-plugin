@@ -61,7 +61,7 @@ public class TestJarPlugin implements Plugin<Project> {
   private void configureTestJar(Project project) {
     JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
     SourceSet testSourceSet = javaPluginExtension.getSourceSets().getByName("test");
-    Jar testJarTask = project.getTasks().create(TEST_JAR_TASK_NAME, Jar.class);
+    Jar testJarTask = project.getTasks().replace(TEST_JAR_TASK_NAME, Jar.class);
     testJarTask.getArchiveClassifier().set(TEST_CLASSIFIER);
     testJarTask.doFirst(jar -> {
       testJarTask.from(testSourceSet.getResources().getSourceDirectories());
