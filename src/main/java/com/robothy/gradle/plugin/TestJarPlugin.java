@@ -63,7 +63,12 @@ public class TestJarPlugin implements Plugin<Project> {
     JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
     SourceSet testSourceSet = javaPluginExtension.getSourceSets().getByName("test");
 
-    Jar testJarTask = project.getTasks().register(TEST_JAR_TASK_NAME, Jar.class).get();
+    Jar testJarTask;
+    if (Objects.isNull(project.getTasks().findByName(TEST_JAR_TASK_NAME))) {
+      testJarTask = project.getTasks().register(TEST_JAR_TASK_NAME, Jar.class).get();
+    } else {
+      testJarTask = (Jar) project.getTasks().getByName(TEST_JAR_TASK_NAME);
+    }
 
     testJarTask.getArchiveClassifier().set(TEST_CLASSIFIER);
     testJarTask.doFirst(jar -> {

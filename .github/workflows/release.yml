@@ -46,6 +46,10 @@ jobs:
           echo "gradle.publish.secret=${{secrets.GRADLE_PUBLISH_SECRET}}" >> ~/.gradle/gradle.properties
           chmod +x gradlew
 
+      - name: Update release version
+        run: |
+          ./gradlew releaseVersion
+
       - name: Release
         if: ${{inputs.gradleLogLevel == 'None'}}
         run: ./gradlew check publishPlugins -Prelease=true
