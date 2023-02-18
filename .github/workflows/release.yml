@@ -40,7 +40,7 @@ jobs:
       - name: Prepare parameters
         run: |
           git log --pretty=format:"%H - %an, %aI : %s" -5
-          mkdir ~/.gradle
+          mkdir -p ~/.gradle
           echo "GITHUB_TOKEN=${{secrets.PACKAGES_TOKEN}}" > ~/.gradle/gradle.properties
           echo "GITHUB_USERNAME=Robothy" >> ~/.gradle/gradle.properties
           echo "gradle.publish.key=${{secrets.GRADLE_PUBLISH_KEY}}" >> ~/.gradle/gradle.properties
