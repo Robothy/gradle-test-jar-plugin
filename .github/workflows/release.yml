@@ -10,6 +10,7 @@ on:
         options:
           - None
           - Info
+          - Warn
           - Debug
           - Stacktrace
 
@@ -52,16 +53,25 @@ jobs:
 
       - name: Release
         if: ${{inputs.gradleLogLevel == 'None'}}
-        run: ./gradlew check publishPlugins -Prelease=true
+        run: |
+          ./gradlew check release
 
       - name: Release(Info)
         if: ${{inputs.gradleLogLevel == 'Info'}}
-        run: ./gradlew check publishPlugins -Prelease=true --info
+        run: .|
+          ./gradlew check release --info
+
+      - name: Release(Warn)
+        if: ${{inputs.gradleLogLevel == 'Warn'}}
+        run: .|
+          ./gradlew check release --warn
 
       - name: Release(Debug)
         if: ${{inputs.gradleLogLevel == 'Debug'}}
-        run: ./gradlew check publishPlugins -Prelease=true --debug
+        run: |
+          ./gradlew check release --debug
 
       - name: Release(Stacktrace)
         if: ${{inputs.gradleLogLevel == 'Stacktrace'}}
-        run: ./gradlew check publishPlugins -Prelease=true --stacktrace
+        run: |
+          ./gradlew check release --stacktrace
