@@ -10,12 +10,14 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.PublishArtifact;
 import org.gradle.api.logging.Logging;
-import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.JavaLibraryPlugin;
+import org.gradle.api.plugins.JavaPlatformExtension;
+import org.gradle.api.plugins.JavaPlatformPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.tasks.SourceSet;
-import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.api.tasks.testing.TestReport;
 import org.gradle.jvm.tasks.Jar;
@@ -48,9 +50,6 @@ public class TestJarPlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
-    if (Objects.isNull(project.getPlugins().findPlugin(JavaPlugin.class))) {
-      throw new IllegalArgumentException("The plugin 'java' must be applied before plugin 'com.robothy.test-jar'.");
-    }
     project.getConfigurations().create(TEST_JAR_CONFIGURATION_NAME);
     project.afterEvaluate(this::configureTestJar);
     project.afterEvaluate(this::registerTestTasks);
@@ -61,7 +60,19 @@ public class TestJarPlugin implements Plugin<Project> {
    */
   private void configureTestJar(Project project) {
     JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
-    SourceSet testSourceSet = javaPluginExtension.getSourceSets().getByName("test");
+    SourceSetContainer sourceSets = javaPluginExtension.getSourceSets();
+
+    SourceSet testSourceSet = sourceSets.findByName("test");
+    if (Objects.isNull(testSourceSet)) {
+      if (Objects.nonNull(project.getPlugins().findPlugin(JavaPlatformPlugin.class))) {
+        throw new IllegalArgumentException("Java platform project doesn't contains any source. " +
+            "You cannot apply the com.robothy.test-jar plugin to this project.");
+      }
+
+      throw new IllegalArgumentException("Please make sure the com.robothy.test-jar plugin is " +
+          "applied after the java or java-library plugin.");
+    }
+
 
     Jar testJarTask;
     if (Objects.isNull(project.getTasks().findByName(TEST_JAR_TASK_NAME))) {

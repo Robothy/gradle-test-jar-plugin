@@ -4,3 +4,5 @@
 */.gradle/*
 /src/functionalTest/resources/test-jar-project/.gradle/
 /src/functionalTest/resources/test-jar-project/build/
+/src/functionalTest/resources/test-jar-with-java-library-project/.gradle/
+/src/functionalTest/resources/test-jar-with-java-library-project/build/

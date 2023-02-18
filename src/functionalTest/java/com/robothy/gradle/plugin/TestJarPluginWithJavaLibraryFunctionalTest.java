@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestJarPluginFunctionalTest {
+public class TestJarPluginWithJavaLibraryFunctionalTest {
 
-  @DisplayName("Test package test classes.")
+  @DisplayName("Test test-jar with java-library project.")
   @Test
   public void testJar() {
-    String projectPath = "src/functionalTest/resources/test-jar-project";
+    String projectPath = "src/functionalTest/resources/test-jar-with-java-library-project";
     BuildResult result = GradleRunner.create()
         .withProjectDir(new File(projectPath))
         .withPluginClasspath()
@@ -21,8 +21,8 @@ public class TestJarPluginFunctionalTest {
 
     Assertions.assertTrue(result.getOutput().contains("BUILD SUCCESSFUL"));
 
-    Assertions.assertTrue(new File(projectPath + "/build/libs/test-jar-project-1.0.jar").exists());
-    Assertions.assertTrue(new File(projectPath + "/build/libs/test-jar-project-1.0-test.jar").exists());
+    Assertions.assertTrue(new File(projectPath + "/build/libs/test-jar-with-java-library-project-1.0.jar").exists());
+    Assertions.assertTrue(new File(projectPath + "/build/libs/test-jar-with-java-library-project-1.0-test.jar").exists());
   }
 
 
