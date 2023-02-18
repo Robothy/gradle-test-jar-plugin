@@ -66,22 +66,20 @@ public class TestJarPlugin implements Plugin<Project> {
     Jar testJarTask;
     if (Objects.isNull(project.getTasks().findByName(TEST_JAR_TASK_NAME))) {
       testJarTask = project.getTasks().register(TEST_JAR_TASK_NAME, Jar.class).get();
-    } else {
-      testJarTask = (Jar) project.getTasks().getByName(TEST_JAR_TASK_NAME);
+      testJarTask.getArchiveClassifier().set(TEST_CLASSIFIER);
+      testJarTask.doFirst(jar -> {
+        testJarTask.from(testSourceSet.getResources().getSourceDirectories());
+        testJarTask.from(testSourceSet.getOutput());
+      });
+
+      PublishArtifact testJarArtifact = project.getArtifacts().add("testJar", testJarTask);
+      PublishingExtension extension = project.getExtensions().findByType(PublishingExtension.class);
+      if (Objects.nonNull(extension)) {
+        extension.getPublications().withType(MavenPublication.class)
+            .configureEach(mavenPublication -> mavenPublication.artifact(testJarArtifact));
+      }
     }
 
-    testJarTask.getArchiveClassifier().set(TEST_CLASSIFIER);
-    testJarTask.doFirst(jar -> {
-      testJarTask.from(testSourceSet.getResources().getSourceDirectories());
-      testJarTask.from(testSourceSet.getOutput());
-    });
-
-    PublishArtifact testJarArtifact = project.getArtifacts().add("testJar", testJarTask);
-    PublishingExtension extension = project.getExtensions().findByType(PublishingExtension.class);
-    if (Objects.nonNull(extension)) {
-      extension.getPublications().withType(MavenPublication.class)
-          .configureEach(mavenPublication -> mavenPublication.artifact(testJarArtifact));
-    }
   }
 
   private void registerTestTasks(Project project) {
